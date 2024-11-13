@@ -1,0 +1,30 @@
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-epls}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      POSTGRES_DB: postgres
+      PGDATA: /data/postgres
+    volumes:
+      - ./postgres:/data/postgres
+    ports:
+      - "25432:5432"
+    restart: unless-stopped
+    networks:
+      epls-local-network:
+       ipv4_address: 10.5.0.5
+
+networks:
+  epls-local-network:
+    external: true
+    name: epls-local-network
+
+volumes:
+  postgres:
+    driver: local
+    driver_opts:
+      type: bind
+      device: ./volumes/postgres
+      o: rw
